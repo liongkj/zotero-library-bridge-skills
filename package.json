@@ -12,23 +12,24 @@
     "updaterdf": "https://raw.githubusercontent.com/liongkj/zotero-library-bridge-skills/main/update.json"
   },
   "main": "src/index.ts",
+  "packageManager": "pnpm@10.28.1",
   "scripts": {
     "build-dev": "cross-env NODE_ENV=development node scripts/build.mjs",
     "build-prod": "cross-env NODE_ENV=production node scripts/build.mjs",
-    "build": "concurrently -c auto npm:build-prod npm:tsc",
+    "build": "concurrently -c auto \"pnpm run build-prod\" \"pnpm run tsc\"",
     "tsc": "tsc --noEmit",
     "start": "node scripts/start.mjs",
-    "start-watch": "npm run build-dev && concurrently -c auto npm:start npm:watch",
+    "start-watch": "pnpm run build-dev && concurrently -c auto \"pnpm run start\" \"pnpm run watch\"",
     "stop": "node scripts/stop.mjs",
-    "restart-dev": "npm run build-dev && npm run stop && npm run start",
-    "restart-prod": "npm run build-prod && npm run stop && npm run start",
-    "restart": "npm run restart-dev",
-    "reload": "npm run build-dev && node scripts/reload.mjs",
-    "watch": "chokidar \"src/**\" \"addon/**\" -c \"npm run reload\"",
+    "restart-dev": "pnpm run build-dev && pnpm run stop && pnpm run start",
+    "restart-prod": "pnpm run build-prod && pnpm run stop && pnpm run start",
+    "restart": "pnpm run restart-dev",
+    "reload": "pnpm run build-dev && node scripts/reload.mjs",
+    "watch": "chokidar \"src/**\" \"addon/**\" -c \"pnpm run reload\"",
     "release": "release-it",
     "lint": "prettier --write . && eslint . --ext .ts --fix",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "update-deps": "npm update --save"
+    "update-deps": "pnpm update --latest"
   },
   "repository": {
     "type": "git",

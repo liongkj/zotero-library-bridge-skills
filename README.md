@@ -33,8 +33,8 @@ Local Zotero desktop add-on that exposes a localhost-only HTTP bridge for LLM wo
 ## Build
 
 ```bash
-npm install
-npm run build-dev
+pnpm install
+pnpm run build-dev
 ```
 
 Built package:
