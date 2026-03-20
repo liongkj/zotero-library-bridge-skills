@@ -92,3 +92,12 @@ Recommended companion skills are under:
 - `skills/zotero-external-search-import`
 - `skills/zotero-library-bridge`
 - `skills/zotero-reading-classifier`
+
+These three skills are intended to compose into one pipeline:
+
+1. `zotero-external-search-import`
+   - OpenAlex-first discovery, normalization, ranking, and orchestration
+2. `zotero-library-bridge`
+   - Zotero import, search, attachments, and full-text retrieval
+3. `zotero-reading-classifier`
+   - TL;DRs, triage, and citation-use notes after import
