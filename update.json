@@ -3,7 +3,7 @@
     "zotero-library-bridge@liongkj.com": {
       "updates": [
         {
-          "version": "0.3.1",
+          "version": "0.3.2",
           "update_link": "https://github.com/liongkj/zotero-library-bridge-skills/releases/latest/download/zotero-library-bridge.xpi",
           "applications": {
             "gecko": {
@@ -12,7 +12,7 @@
           }
         },
         {
-          "version": "0.3.1",
+          "version": "0.3.2",
           "update_link": "https://github.com/liongkj/zotero-library-bridge-skills/releases/latest/download/zotero-library-bridge.xpi",
           "applications": {
             "zotero": {

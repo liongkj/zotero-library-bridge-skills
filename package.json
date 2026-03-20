@@ -1,6 +1,6 @@
 {
   "name": "zotero-library-bridge",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Local Zotero library bridge plugin for import, reading, tagging, and citation workflows",
   "config": {
     "addonName": "Zotero Library Bridge",
