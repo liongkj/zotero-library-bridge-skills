@@ -7,6 +7,8 @@ description: Read Zotero metadata and available full text, classify papers by re
 
 Turn imported Zotero items into citation-ready knowledge by reading, classifying, organizing, and summarizing.
 
+Use this skill after paper discovery/import when the user wants TL;DRs, relevance triage, "where to cite", or short manuscript-ready notes.
+
 ## Default classification tags
 
 - `radical`
@@ -20,14 +22,23 @@ Turn imported Zotero items into citation-ready knowledge by reading, classifying
 ## Workflow
 
 1. Read metadata and abstract first.
-2. If full text is available, read attachment text.
-3. Assign tags and confidence.
-4. Choose collection path.
-5. Create short note with manuscript guidance.
+2. If full text is not yet available, call `zotero-library-bridge` full-text retrieval before proceeding.
+3. Read attachment text when available.
+4. Produce a short TL;DR grounded in abstract or attachment text.
+5. Assign tags and confidence.
+6. Choose collection path.
+7. Create short note with manuscript guidance.
+
+## Cross-skill handoff
+
+- For web discovery, start with `zotero-external-search-import`.
+- For library writes and attachment access, use `zotero-library-bridge`.
+- This skill owns the summarization/TL;DR step; do not assume the bridge generates summaries automatically.
 
 ## Note template
 
 ```text
+TL;DR: ...
 Main contribution: ...
 Most useful for: ...
 Potential citation sentence: ...

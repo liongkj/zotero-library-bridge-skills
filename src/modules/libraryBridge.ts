@@ -183,7 +183,7 @@ export default class ZoteroLibraryBridge {
         break;
       }
 
-      await Zotero.Promise.delay(10);
+      await new Promise<void>((resolve) => setTimeout(resolve, 10));
     }
 
     return raw;
@@ -353,6 +353,54 @@ export default class ZoteroLibraryBridge {
               host: "127.0.0.1",
               port: this.port,
               addon: config.addonName,
+            },
+          },
+        ],
+        errors: [],
+      };
+    }
+
+    if (method === "GET" && url.pathname === "/v1/capabilities") {
+      return {
+        action: "capabilities",
+        status: "ok",
+        summary: "Bridge capabilities",
+        results: [
+          {
+            status: "ok",
+            details: "Supported actions and workflow defaults",
+            data: {
+              host: "127.0.0.1",
+              port: this.port,
+              requires_token: false,
+              actions: [
+                "import_items",
+                "find_full_text",
+                "get_items",
+                "get_attachments",
+                "get_attachment_text",
+                "add_tags",
+                "move_to_collection",
+                "create_note",
+                "format_citation",
+                "format_bibliography",
+              ],
+              defaults: {
+                import_items: {
+                  fetch_full_text: false,
+                },
+                summarization: {
+                  supported: false,
+                  note: "Use the zotero-reading-classifier skill after import and full-text retrieval",
+                },
+              },
+              routes: {
+                health: "GET /v1/health",
+                capabilities: "GET /v1/capabilities",
+                import_items: "POST /v1/import-items",
+                find_full_text: "POST /v1/find-full-text",
+                get_items: "GET /v1/items?q=<query>&limit=<n>",
+              },
             },
           },
         ],
@@ -573,6 +621,9 @@ export default class ZoteroLibraryBridge {
       : Array.isArray(payload.items)
         ? payload.items
         : [];
+    const shouldFetchFullText = Boolean(
+      payload.fetch_full_text ?? payload.find_full_text ?? false,
+    );
 
     if (!records.length) {
       return {
@@ -586,6 +637,7 @@ export default class ZoteroLibraryBridge {
 
     const results: BridgeResult[] = [];
     const errors: string[] = [];
+    const importedItemIDs: string[] = [];
 
     for (const record of records) {
       try {
@@ -613,11 +665,16 @@ export default class ZoteroLibraryBridge {
         }
 
         await item.saveTx();
+        const itemID = item.key || String(item.id || "");
+        importedItemIDs.push(itemID);
 
         results.push({
-          item_id: item.key || String(item.id || ""),
+          item_id: itemID,
           status: "ok",
           details: `Imported ${item.getField("title") || "item"}`,
+          data: {
+            fetch_full_text_requested: shouldFetchFullText,
+          },
         });
       } catch (error: any) {
         const title = String(record?.title || "unknown");
@@ -630,10 +687,25 @@ export default class ZoteroLibraryBridge {
       }
     }
 
+    let fullTextSummary = "";
+    if (shouldFetchFullText && importedItemIDs.length > 0) {
+      const fullTextResponse = await this.handleFindFullText({
+        item_ids: importedItemIDs,
+      });
+      for (const result of fullTextResponse.results) {
+        results.push({
+          ...result,
+          details: `[full-text] ${result.details}`,
+        });
+      }
+      errors.push(...fullTextResponse.errors);
+      fullTextSummary = `; full-text retrieval processed for ${importedItemIDs.length} imported item(s)`;
+    }
+
     return {
       action: "import_items",
       status: this.normalizeStatus(results, errors),
-      summary: `Imported ${results.filter((result) => result.status === "ok").length}/${records.length} records`,
+      summary: `Imported ${importedItemIDs.length}/${records.length} records${fullTextSummary}`,
       results,
       errors,
     };
@@ -658,7 +730,7 @@ export default class ZoteroLibraryBridge {
     (search as AnyObject).libraryID = this.getLibraryID();
     search.addCondition("quicksearch-titleCreatorYear", "contains", query);
 
-    const ids: number[] = await search.search();
+    const ids = (await (search as AnyObject).search()) as number[];
     const sliced = ids.slice(0, limit);
 
     for (const itemID of sliced) {
