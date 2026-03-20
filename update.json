@@ -1,0 +1,26 @@
+{
+  "addons": {
+    "zotero-library-bridge@liongkj.com": {
+      "updates": [
+        {
+          "version": "0.3.0",
+          "update_link": "https://github.com/liongkj/zotero-library-bridge-skills/releases/latest/download/zotero-library-bridge.xpi",
+          "applications": {
+            "gecko": {
+              "strict_min_version": "60.0"
+            }
+          }
+        },
+        {
+          "version": "0.3.0",
+          "update_link": "https://github.com/liongkj/zotero-library-bridge-skills/releases/latest/download/zotero-library-bridge.xpi",
+          "applications": {
+            "zotero": {
+              "strict_min_version": "7.0"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+**/builds
+build/
+node_modules
+zotero-cmd.json
+.DS_Store

@@ -1,0 +1,23 @@
+{
+  "skill_name": "zotero-reading-classifier",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Given 10 Zotero items on boryl radicals with mixed metadata quality, classify them using the default schema and produce concise manuscript-ready notes.",
+      "expected_output": "Per-item tags, confidence, where-to-cite guidance, and short notes with limitations.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I pasted an introduction paragraph. Find supporting references from my Zotero library only and propose citations for intro paragraph 3-4.",
+      "expected_output": "Ranked citation candidates with rationale and no fabricated references.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "For items already tagged methodology and mechanism, reorganize into Background reviews vs Mechanistic precedents and add a 3-line note each.",
+      "expected_output": "Collection decisions plus concise notes reflecting evidence from abstract/full text.",
+      "files": []
+    }
+  ]
+}

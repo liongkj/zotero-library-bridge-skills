@@ -1,0 +1,64 @@
+{
+  "name": "zotero-library-bridge",
+  "version": "0.3.0",
+  "description": "Local Zotero library bridge plugin for import, reading, tagging, and citation workflows",
+  "config": {
+    "addonName": "Zotero Library Bridge",
+    "addonID": "zotero-library-bridge@liongkj.com",
+    "addonRef": "zoterolibrarybridge",
+    "addonInstance": "ZoteroLibraryBridge",
+    "prefsPrefix": "extensions.zotero.zoterolibrarybridge",
+    "releasepage": "https://github.com/liongkj/zotero-library-bridge-skills/releases/latest/download/zotero-library-bridge.xpi",
+    "updaterdf": "https://raw.githubusercontent.com/liongkj/zotero-library-bridge-skills/main/update.json"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "build-dev": "cross-env NODE_ENV=development node scripts/build.mjs",
+    "build-prod": "cross-env NODE_ENV=production node scripts/build.mjs",
+    "build": "concurrently -c auto npm:build-prod npm:tsc",
+    "tsc": "tsc --noEmit",
+    "start": "node scripts/start.mjs",
+    "start-watch": "npm run build-dev && concurrently -c auto npm:start npm:watch",
+    "stop": "node scripts/stop.mjs",
+    "restart-dev": "npm run build-dev && npm run stop && npm run start",
+    "restart-prod": "npm run build-prod && npm run stop && npm run start",
+    "restart": "npm run restart-dev",
+    "reload": "npm run build-dev && node scripts/reload.mjs",
+    "watch": "chokidar \"src/**\" \"addon/**\" -c \"npm run reload\"",
+    "release": "release-it",
+    "lint": "prettier --write . && eslint . --ext .ts --fix",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update-deps": "npm update --save"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liongkj/zotero-library-bridge-skills.git"
+  },
+  "author": "Khai Jiet Liong <me@liongkj.com>",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/liongkj/zotero-library-bridge-skills/issues"
+  },
+  "homepage": "https://github.com/liongkj/zotero-library-bridge-skills#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "compressing": "^1.9.0",
+    "concurrently": "^8.0.1",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.17.18",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "minimist": "^1.2.8",
+    "prettier": "2.8.8",
+    "release-it": "^15.10.3",
+    "replace-in-file": "^7.0.1",
+    "typescript": "^5.0.4",
+    "zotero-types": "^1.2.1"
+  },
+  "prettier": {
+    "tabWidth": 2
+  }
+}

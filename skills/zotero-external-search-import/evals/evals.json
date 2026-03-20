@@ -1,0 +1,23 @@
+{
+  "skill_name": "zotero-external-search-import",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I am writing a radical borylation intro. Find 8-12 papers from 2020 onward about Lewis base boryl radicals, include DOI and abstract when possible, and return import-ready records.",
+      "expected_output": "Deduplicated normalized records with title, authors, journal, year, DOI, abstract, URL, and relevance rationale.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Search for mechanistic precedents on nickel-catalyzed radical coupling and prioritize high-impact journals. Keep only papers with strong mechanistic discussion.",
+      "expected_output": "Ranked paper list with clear relevance scoring and concise search summary.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I have a messy list of paper titles with duplicates and typos. Please resolve DOIs where possible and output a clean import payload.",
+      "expected_output": "Cleaned records with duplicate removal and uncertainty notes for unresolved matches.",
+      "files": []
+    }
+  ]
+}
