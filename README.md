@@ -19,6 +19,7 @@ Local Zotero desktop add-on that exposes a localhost-only HTTP bridge for LLM wo
 ## API endpoints
 
 - `GET /v1/health`
+- `GET /v1/capabilities`
 - `POST /v1/import-items`
 - `GET /v1/items?q=<query>&limit=<n>`
 - `GET /v1/items/:itemKey/attachments`
@@ -52,7 +53,36 @@ Built package:
 
 ```bash
 curl -sS -i "http://127.0.0.1:23130/v1/health"
+curl -sS "http://127.0.0.1:23130/v1/capabilities"
 curl -sS -G --data-urlencode "q=attention" --data-urlencode "limit=5" "http://127.0.0.1:23130/v1/items"
+```
+
+Healthy startup should report the bridge host, port, and addon name from `/v1/health`.
+
+## Import behavior
+
+- `POST /v1/import-items` imports metadata by default.
+- To queue Zotero's full-text lookup immediately after import, pass `"fetch_full_text": true`.
+- The bridge does not generate TL;DRs or notes automatically. Use `skills/zotero-reading-classifier` after import and full-text retrieval when the user asks for summaries, triage, or citation notes.
+
+Example:
+
+```bash
+curl -sS -X POST "http://127.0.0.1:23130/v1/import-items" \
+  -H "Content-Type: application/json" \
+  --data '{
+    "fetch_full_text": true,
+    "records": [
+      {
+        "title": "Example paper",
+        "authors": ["Ada Lovelace"],
+        "journal": "Journal of Examples",
+        "year": 2026,
+        "doi": "10.0000/example",
+        "url": "https://doi.org/10.0000/example"
+      }
+    ]
+  }'
 ```
 
 ## Skill files
