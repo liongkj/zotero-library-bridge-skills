@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "PDF Figure",
-  "version": "0.2.6",
-  "description": "一个基于 PDFFigure2 的 PDF 图表解析插件",
+  "name": "Zotero Library Bridge",
+  "version": "0.2.16",
+  "description": "Local Zotero library bridge plugin for import, reading, tagging, and citation workflows",
   "homepage_url": "https://github.com/MuiseDestiny/zotero-figure#readme",
   "author": "Polygon",
   "icons": {
@@ -11,10 +11,10 @@
   },
   "applications": {
     "zotero": {
-      "id": "zoterofigure@polygon.org",
+      "id": "zotero-library-bridge@polygon.org",
       "update_url": "https://raw.githubusercontent.com/MuiseDestiny/zotero-figure/bootstrap/update.json",
-      "strict_min_version": "6.999",
-      "strict_max_version": "7.0.*"
+      "strict_min_version": "7.0",
+      "strict_max_version": "999.*"
     }
   }
 }

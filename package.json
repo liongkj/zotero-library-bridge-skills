@@ -1,14 +1,14 @@
 {
-  "name": "zotero-figure",
-  "version": "0.2.6",
-  "description": "一个基于 PDFFigure2 的 PDF 图表解析插件",
+  "name": "zotero-library-bridge",
+  "version": "0.2.16",
+  "description": "Local Zotero library bridge plugin for import, reading, tagging, and citation workflows",
   "config": {
-    "addonName": "PDF Figure",
-    "addonID": "zoterofigure@polygon.org",
-    "addonRef": "zoterofigure",
-    "addonInstance": "ZoteroFigure",
-    "prefsPrefix": "extensions.zotero.zoterofigure",
-    "releasepage": "https://github.com/MuiseDestiny/zotero-figure/releases/latest/download/zotero-figure.xpi",
+    "addonName": "Zotero Library Bridge",
+    "addonID": "zotero-library-bridge@polygon.org",
+    "addonRef": "zoterolibrarybridge",
+    "addonInstance": "ZoteroLibraryBridge",
+    "prefsPrefix": "extensions.zotero.zoterolibrarybridge",
+    "releasepage": "https://github.com/MuiseDestiny/zotero-figure/releases/latest/download/zotero-library-bridge.xpi",
     "updaterdf": "https://raw.githubusercontent.com/MuiseDestiny/zotero-figure/bootstrap/update.json"
   },
   "main": "src/index.ts",

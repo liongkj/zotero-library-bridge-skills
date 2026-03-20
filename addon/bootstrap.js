@@ -9,6 +9,14 @@ if (typeof Zotero == "undefined") {
   var Zotero;
 }
 
+var wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(
+  Ci.nsIWindowMediator,
+);
+var ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+var scriptLoader = Cc["@mozilla.org/moz/jssubscript-loader;1"].getService(
+  Ci.mozIJSSubScriptLoader,
+);
+
 var chromeHandle;
 
 var windowListener;
@@ -25,10 +33,7 @@ async function waitForZotero() {
       resolve();
     }
 
-    const { Services } = ChromeUtils.import(
-      "resource://gre/modules/Services.jsm",
-    );
-    const windows = Services.wm.getEnumerator("navigator:browser");
+    const windows = wm.getEnumerator("navigator:browser");
     let found = false;
     while (windows.hasMoreElements()) {
       let win = windows.getNext();
@@ -77,7 +82,7 @@ async function waitForZotero() {
         }
       },
     };
-    Services.wm.addListener(windowListener);
+    wm.addListener(windowListener);
   });
 }
 
@@ -95,7 +100,7 @@ async function startup({ id, version, resourceURI, rootURI }, reason) {
   var aomStartup = Components.classes[
     "@mozilla.org/addons/addon-manager-startup;1"
   ].getService(Components.interfaces.amIAddonManagerStartup);
-  var manifestURI = Services.io.newURI(rootURI + "manifest.json");
+  var manifestURI = ioService.newURI(rootURI + "manifest.json");
   chromeHandle = aomStartup.registerChrome(manifestURI, [
     ["content", "__addonRef__", rootURI + "chrome/content/"],
   ]);
@@ -108,10 +113,11 @@ async function startup({ id, version, resourceURI, rootURI }, reason) {
    */
   const ctx = {
     rootURI,
+    Zotero,
   };
   ctx._globalThis = ctx;
 
-  Services.scriptloader.loadSubScript(
+  scriptLoader.loadSubScript(
     `${rootURI}/chrome/content/scripts/__addonRef__.js`,
     ctx,
   );
@@ -121,7 +127,7 @@ function shutdown({ id, version, resourceURI, rootURI }, reason) {
   if (reason === APP_SHUTDOWN) {
     return;
   }
-  Services.wm.removeListener(windowListener);
+  wm.removeListener(windowListener);
 
   if (typeof Zotero === "undefined") {
     Zotero = Components.classes["@zotero.org/Zotero;1"].getService(

@@ -1,75 +1,59 @@
-/* eslint-disable no-empty */
 import { config } from "../package.json";
-import Views from "./modules/views";
+import ZoteroLibraryBridge from "./modules/libraryBridge";
+
+function log(message: string, error?: unknown) {
+  if (error) {
+    Zotero.debug(`[${config.addonRef}] ${message}: ${String(error)}`);
+  } else {
+    Zotero.debug(`[${config.addonRef}] ${message}`);
+  }
+}
 
 async function onStartup() {
-  await Promise.all([
-    Zotero.initializationPromise,
-    Zotero.unlockPromise,
-    Zotero.uiReadyPromise,
-  ]);
+  await Promise.all([Zotero.initializationPromise, Zotero.uiReadyPromise]);
 
-  await onMainWindowLoad(window)
+  if (!addon.data.bridge) {
+    try {
+      addon.data.bridge = new ZoteroLibraryBridge();
+      addon.data.bridge.start();
+      log("library bridge started");
+    } catch (error) {
+      log("library bridge startup failed", error);
+    }
+  }
 }
 
-async function onMainWindowLoad(win: Window): Promise < void>  {
-  const views = new Views()
+async function onMainWindowLoad(_win: Window): Promise<void> {
+  // no-op
 }
 
-async function onMainWindowUnload(win: Window): Promise<void> {
-  ztoolkit.unregisterAll();
-  addon.data.dialog?.window?.close();
+async function onMainWindowUnload(_win: Window): Promise<void> {
+  // no-op
 }
-
 
 function onShutdown(): void {
-  ztoolkit.unregisterAll();
-  addon.data.dialog?.window?.close();
-  // Remove addon object
+  try {
+    addon.data.bridge?.stop?.();
+  } catch (error) {
+    log("library bridge shutdown failed", error);
+  }
+
   addon.data.alive = false;
-  delete Zotero[config.addonInstance];
+  delete (Zotero as any)[config.addonInstance];
 }
 
-/**
- * This function is just an example of dispatcher for Notify events.
- * Any operations should be placed in a function to keep this funcion clear.
- */
 async function onNotify(
-  event: string,
-  type: string,
-  ids: Array<string | number>,
-  extraData: { [key: string]: any }
+  _event: string,
+  _type: string,
+  _ids: Array<string | number>,
+  _extraData: { [key: string]: any },
 ) {
-  // You can add your code to the corresponding notify type
-  ztoolkit.log("notify", event, type, ids, extraData);
-  if (
-    event == "select" &&
-    type == "tab" &&
-    extraData[ids[0]].type == "reader"
-  ) {
-  } else {
-    return;
-  }
+  // no-op
 }
 
-/**
- * This function is just an example of dispatcher for Preference UI events.
- * Any operations should be placed in a function to keep this funcion clear.
- * @param type event type
- * @param data event data
- */
-async function onPrefsEvent(type: string, data: { [key: string]: any }) {
-  switch (type) {
-    case "load":
-      registerPrefsScripts(data.window);
-      break;
-    default:
-      return;
-  }
+async function onPrefsEvent(_type: string, _data: { [key: string]: any }) {
+  // no-op
 }
-// Add your hooks here. For element click, etc.
-// Keep in mind hooks only do dispatch. Don't add code that does real jobs in hooks.
-// Otherwise the code would be hard to read and maintian.
 
 export default {
   onStartup,

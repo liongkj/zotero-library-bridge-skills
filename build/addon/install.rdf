@@ -5,16 +5,16 @@
     xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
     <RDF:Description
         RDF:about="urn:mozilla:install-manifest"
-        em:id="__addonID__"
-        em:name="__addonName__"
-        em:version="__buildVersion__"
+        em:id="zotero-library-bridge@polygon.org"
+        em:name="Zotero Library Bridge"
+        em:version="0.2.16"
         em:type="2"
-        em:creator="__author__"
-        em:description="__description__"
-        em:homepageURL="__homepage__"
-        em:iconURL="chrome://__addonRef__/content/icons/favicon.png"
-        em:optionsURL="chrome://__addonRef__/content/preferences.xul"
-        em:updateURL="__updaterdf__"
+        em:creator="Polygon"
+        em:description="Local Zotero library bridge plugin for import, reading, tagging, and citation workflows"
+        em:homepageURL="https://github.com/MuiseDestiny/zotero-figure#readme"
+        em:iconURL="chrome://zoterolibrarybridge/content/icons/favicon.png"
+        em:optionsURL="chrome://zoterolibrarybridge/content/preferences.xul"
+        em:updateURL="https://raw.githubusercontent.com/MuiseDestiny/zotero-figure/bootstrap/update.json"
         em:multiprocessCompatible="true"
         em:bootstrap="true">
         <em:targetApplication>

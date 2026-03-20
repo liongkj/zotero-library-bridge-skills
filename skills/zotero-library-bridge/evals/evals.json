@@ -1,0 +1,38 @@
+{
+  "skill_name": "zotero-library-bridge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Import these normalized records into my Zotero library, then trigger full-text retrieval for all newly created items and report item IDs and failures.",
+      "expected_output": "Structured action results with per-item status, created item IDs, and full-text retrieval outcomes.",
+      "files": [],
+      "assertions": [
+        "Response includes per-item status entries and no fabricated item keys",
+        "At least one import action result contains an item_id when import succeeds",
+        "Full-text retrieval step reports success, skipped, or error explicitly per item"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "For item keys A1B2C3 and D4E5F6, fetch attachment lists and return extracted text previews when available.",
+      "expected_output": "Attachment-level results with explicit handling for missing or non-text attachments.",
+      "files": [],
+      "assertions": [
+        "Attachment listing response includes content type metadata for each attachment",
+        "Missing or inaccessible attachments are reported as skipped or error, not silently omitted",
+        "Attachment text output includes a bounded preview field when text is available"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Apply tags [radical, mechanism, to-cite] to selected items, move them into Mechanistic precedents, and create short notes from supplied summaries.",
+      "expected_output": "Confirmed mutation actions with clear success and partial-failure reporting.",
+      "files": [],
+      "assertions": [
+        "Tagging response confirms all requested tags or explains which failed",
+        "Collection move response includes resolved collection identifier or explicit failure reason",
+        "Note creation returns a newly created note item key when successful"
+      ]
+    }
+  ]
+}

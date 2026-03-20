@@ -1,3 +1,3 @@
-pref("extensions.zotero.zoterofigure.enable", true);
-pref("extensions.zotero.zoterofigure.path.java", "");
-pref("extensions.zotero.zoterofigure.view", "Annotation");
+pref("extensions.zotero.zoterolibrarybridge.enable", true);
+pref("extensions.zotero.zoterolibrarybridge.path.java", "");
+pref("extensions.zotero.zoterolibrarybridge.view", "Annotation");
