@@ -1,0 +1,29 @@
+{
+  "skill_name": "zotero-onboard-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "No workflow profile exists yet. Onboard me with tags [review, mechanism, to-cite], triage_mode deep, and note fields [TL;DR, Evidence quality, Citation sentence, Where to cite].",
+      "expected_output": "Creates user-workflow.yaml with requested tags, triage mode, and note fields; returns active workflow summary.",
+      "files": [
+        "../zotero-reading-classifier/user-workflow.yaml"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Update my existing workflow so high confidence does not require full text and add custom tag benchmark-paper.",
+      "expected_output": "Applies minimal profile changes, keeps existing keys, and reports exact updated fields.",
+      "files": [
+        "../zotero-reading-classifier/user-workflow.yaml"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My profile has triage_mode='detailed' and empty note_template.fields. Fix it without deleting unrelated settings.",
+      "expected_output": "Validation failure is identified and corrected with allowed values while preserving unrelated profile content.",
+      "files": [
+        "../zotero-reading-classifier/user-workflow.yaml"
+      ]
+    }
+  ]
+}

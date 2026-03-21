@@ -1,0 +1,43 @@
+workflow_name: "my-lab-default"
+triage_mode: "deep" # fast|deep
+
+tags:
+  include:
+    - "review"
+    - "methodology"
+    - "mechanism"
+    - "to-cite"
+  custom:
+    - "dataset-paper"
+    - "negative-result"
+
+collection_rules:
+  - if_tags:
+      - "review"
+    move_to: "Reading/Background Reviews"
+  - if_tags:
+      - "mechanism"
+    move_to: "Reading/Mechanistic Precedents"
+  - if_tags:
+      - "to-cite"
+    move_to: "Writing/Shortlist"
+
+confidence_policy:
+  level: "moderate" # strict|moderate|lenient
+  require_full_text_for_high: true
+
+where_to_cite_labels:
+  - "introduction"
+  - "methods"
+  - "results"
+  - "discussion"
+
+note_template:
+  fields:
+    - "TL;DR"
+    - "Main contribution"
+    - "Evidence quality"
+    - "Potential citation sentence"
+    - "Limitations"
+    - "Where to cite"
+    - "Confidence"

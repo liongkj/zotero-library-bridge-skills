@@ -39,6 +39,8 @@ Use OpenAlex as the default discovery backend, normalize records into the Zotero
    - Unless the user explicitly asked for metadata-only import, request `fetch_full_text=true` when DOI or OA/full-text hints are present.
 7. `summarize`
    - If the user asked for TL;DRs, triage, or citation notes, hand off to `zotero-reading-classifier` after import/full-text retrieval.
+8. `report`
+   - Return per-item import status, Zotero `item_id` keys, and full-text retrieval outcomes.
 
 ## Default flow and stopping points
 
@@ -71,6 +73,48 @@ Use OpenAlex as the default discovery backend, normalize records into the Zotero
   - owns Zotero import, search, attachments, and full-text retrieval
 - `zotero-reading-classifier`
   - owns TL;DRs, triage, and citation-use notes
+
+## Bridge handoff contract
+
+When handing records to `zotero-library-bridge`:
+
+1. Normalize first, then dedupe.
+2. Resolve bridge behavior from `GET /v1/capabilities` before import.
+3. Map records directly to `import_items(records)` payload.
+4. Use small batches for imports (recommended 10-20 records/request).
+5. Return imported Zotero `item_id` values in deterministic order.
+6. For full text, call `find_full_text(item_ids)` in chunks of 5-10.
+
+Required minimal fields per record:
+
+```json
+{
+  "title": "string",
+  "authors": ["string"],
+  "journal": "string or null",
+  "year": 2026,
+  "doi": "string or null",
+  "url": "string"
+}
+```
+
+Recommended optional fields:
+
+- `abstract`
+- `pdf_url`
+- `keywords`
+- `source`
+
+## Bridge availability fallback
+
+If bridge is unavailable or misconfigured:
+
+1. Return import-ready JSON without mutating Zotero.
+2. Provide these verification commands:
+   - `curl -sS -i "http://127.0.0.1:23130/v1/health"`
+   - `curl -sS -i "http://127.0.0.1:23130/v1/capabilities"`
+3. Explain likely cause (`connection refused`, `route not found`, token mismatch).
+4. Provide a single retry import command once health is restored.
 
 ## Record schema
 

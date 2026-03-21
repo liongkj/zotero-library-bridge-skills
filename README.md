@@ -89,15 +89,28 @@ curl -sS -X POST "http://127.0.0.1:23130/v1/import-items" \
 
 Recommended companion skills are under:
 
+- `skills/zotero-onboard-skill`
 - `skills/zotero-external-search-import`
 - `skills/zotero-library-bridge`
 - `skills/zotero-reading-classifier`
 
-These three skills are intended to compose into one pipeline:
+These four skills are intended to compose into one pipeline:
 
+0. `zotero-onboard-skill` (optional but recommended first)
+   - Captures user workflow preferences and writes `user-workflow.yaml`
 1. `zotero-external-search-import`
    - OpenAlex-first discovery, normalization, ranking, and orchestration
 2. `zotero-library-bridge`
    - Zotero import, search, attachments, and full-text retrieval
 3. `zotero-reading-classifier`
    - TL;DRs, triage, and citation-use notes after import
+
+To customize reading/triage behavior per user workflow, copy:
+
+- `skills/zotero-reading-classifier/user-workflow.example.yaml`
+
+to:
+
+- `skills/zotero-reading-classifier/user-workflow.yaml`
+
+and edit tags, collection rules, note template fields, and confidence settings.

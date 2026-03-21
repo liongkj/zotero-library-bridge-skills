@@ -18,6 +18,14 @@
       "prompt": "For items already tagged methodology and mechanism, reorganize into Background reviews vs Mechanistic precedents and add a 3-line note each.",
       "expected_output": "Collection decisions plus concise notes reflecting evidence from abstract/full text.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Use my custom workflow profile from user-workflow.yaml: tags [review, benchmark, to-cite], section labels [intro, method, results], and note fields [TL;DR, Evidence quality, Citation sentence]. Classify 8 imported items and produce notes using only that profile.",
+      "expected_output": "Per-item tags, confidence, where-to-cite labels, and notes that follow the custom profile instead of skill defaults.",
+      "files": [
+        "user-workflow.yaml"
+      ]
     }
   ]
 }
