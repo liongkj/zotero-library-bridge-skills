@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from typing import Any
@@ -31,21 +33,20 @@ def strip_doi(raw_doi: str | None) -> str | None:
         return None
 
     doi = raw_doi.strip()
-    prefixes = ("https://doi.org/", "http://doi.org/", "doi:")
+    prefixes = (
+        "https://doi.org/",
+        "http://doi.org/",
+        "https://dx.doi.org/",
+        "http://dx.doi.org/",
+        "doi.org/",
+        "dx.doi.org/",
+        "doi:",
+    )
     lower = doi.lower()
     for prefix in prefixes:
         if lower.startswith(prefix):
             return doi[len(prefix) :]
     return doi
-
-
-def get_nested(mapping: dict[str, Any] | None, *keys: str) -> Any:
-    current: Any = mapping or {}
-    for key in keys:
-        if not isinstance(current, dict):
-            return None
-        current = current.get(key)
-    return current
 
 
 def normalize_work(work: dict[str, Any]) -> dict[str, Any]:
@@ -82,12 +83,20 @@ def normalize_work(work: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_url(query: str, year_from: int | None, year_to: int | None, limit: int) -> str:
+def build_url(
+    query: str,
+    year_from: int | None,
+    year_to: int | None,
+    limit: int,
+    mailto: str | None,
+) -> str:
     params = {
         "search": query,
         "per-page": str(limit),
-        "mailto": "me@liongkj.com",
     }
+    if mailto:
+        params["mailto"] = mailto
+
     filters: list[str] = []
     if year_from is not None:
         filters.append(f"from_publication_date:{year_from}-01-01")
@@ -105,13 +114,43 @@ def main() -> int:
     parser.add_argument("--year-from", type=int, default=None)
     parser.add_argument("--year-to", type=int, default=None)
     parser.add_argument("--limit", type=int, default=10)
+    parser.add_argument(
+        "--mailto",
+        default=os.getenv("OPENALEX_MAILTO", "me@liongkj.com"),
+        help="Contact email for OpenAlex polite pool (default: OPENALEX_MAILTO env or me@liongkj.com)",
+    )
+    parser.add_argument(
+        "--user-agent",
+        default=os.getenv(
+            "OPENALEX_USER_AGENT",
+            "zotero-library-bridge-openalex-helper/0.3.3",
+        ),
+        help="User-Agent header (default: OPENALEX_USER_AGENT env or local helper identifier)",
+    )
     args = parser.parse_args()
 
-    url = build_url(args.query, args.year_from, args.year_to, args.limit)
-    request = urllib.request.Request(url, headers={"User-Agent": "zotero-library-bridge/0.3.3"})
+    url = build_url(args.query, args.year_from, args.year_to, args.limit, args.mailto)
+    request = urllib.request.Request(url, headers={"User-Agent": args.user_agent})
 
-    with urllib.request.urlopen(request, timeout=30) as response:
-      payload = json.load(response)
+    try:
+        with urllib.request.urlopen(request, timeout=30) as response:
+            payload = json.load(response)
+    except urllib.error.HTTPError as error:
+        print(
+            f"OpenAlex request failed with HTTP {error.code}: {error.reason}",
+            file=sys.stderr,
+        )
+        return 1
+    except urllib.error.URLError as error:
+        print(f"OpenAlex network error: {error.reason}", file=sys.stderr)
+        return 1
+    except json.JSONDecodeError as error:
+        print(f"OpenAlex response was not valid JSON: {error}", file=sys.stderr)
+        return 1
+
+    if not isinstance(payload, dict):
+        print("OpenAlex response JSON was not an object", file=sys.stderr)
+        return 1
 
     results = [normalize_work(work) for work in payload.get("results") or []]
     json.dump({"records": results}, sys.stdout, indent=2, ensure_ascii=True)
