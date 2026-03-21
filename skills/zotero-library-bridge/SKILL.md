@@ -53,6 +53,9 @@ POST /v1/format/bibliography
   - call `import_items(records)`
 - Import and queue full-text retrieval:
   - call `import_items(records, fetch_full_text=true)`
+- OpenAlex-first discovery pipeline:
+  - let `zotero-external-search-import` discover and normalize records
+  - import with `fetch_full_text=true` unless the user asked for metadata-only
 - Summarize or make TL;DR notes:
   - import first
   - fetch full text if attachments are missing
@@ -61,7 +64,7 @@ POST /v1/format/bibliography
 ## Workflow boundaries
 
 - This bridge mutates and reads the Zotero library.
-- It does not search the web for papers; use `zotero-external-search-import` for discovery.
+- It does not search the web for papers; use `zotero-external-search-import` for OpenAlex-first discovery and orchestration.
 - It does not generate TL;DRs or citation-use notes on its own; use `zotero-reading-classifier` after import.
 
 ## Security baseline

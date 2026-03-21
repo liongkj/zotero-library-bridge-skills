@@ -31,7 +31,7 @@ Use this skill after paper discovery/import when the user wants TL;DRs, relevanc
 
 ## Cross-skill handoff
 
-- For web discovery, start with `zotero-external-search-import`.
+- For web discovery, start with `zotero-external-search-import`, which owns the OpenAlex-first search and import orchestration.
 - For library writes and attachment access, use `zotero-library-bridge`.
 - This skill owns the summarization/TL;DR step; do not assume the bridge generates summaries automatically.
 
